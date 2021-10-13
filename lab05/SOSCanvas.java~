@@ -1,0 +1,34 @@
+import cs101.sosgame.SOS;
+import java.awt.*;
+import javax.swing.*;
+
+public class SOSCanvas extends JPanel
+{
+   SOS board;
+   int side=400;
+   public SOSCanvas( SOS board)
+   {
+      this.board = board;
+   }
+   
+   @Override
+   public void paintComponent( Graphics g)
+   {
+
+      for (int i = 0; i <= side; i +=side / board.getDimension())
+      {
+         g.drawLine(0, i, side, i);
+         g.drawLine(i, side, i, 0);
+      }
+      
+      for(int i = (side/board.getDimension())/2; i <= side; i+= (side/board.getDimension()) )
+      {
+         for ( int j = (side/board.getDimension())/2; j <= side; j+=(side/board.getDimension()))
+         {
+            g.drawString("*", i, j);
+            g.drawString("*", j, i);
+         }
+      }
+      repaint();
+   }
+}

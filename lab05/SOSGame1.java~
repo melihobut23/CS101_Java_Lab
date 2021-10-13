@@ -1,0 +1,28 @@
+import cs101.sosgame.SOS;
+
+import java.awt.*;
+import javax.swing.*;
+
+public class SOSGame1 
+{
+    public static void main(String args[])
+    {
+        SOS board = new SOS(5);
+        String playerName1 = "";
+        String playerName2 = "";
+        JTextField player1 = new JTextField(10);
+        JTextField player2 = new JTextField(10);
+        SOSCanvas sos = new SOSCanvas(board);
+        SOSGUIPanel sosGui = new SOSGUIPanel(board, player1, player2);
+        
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setTitle("SOS Game");
+        frame.setSize(700,700);
+       
+        frame.add(sos, BorderLayout.CENTER);
+        frame.add(sosGui, BorderLayout.SOUTH);
+        frame.setResizable(true);
+        frame.setVisible(true);
+    }
+}

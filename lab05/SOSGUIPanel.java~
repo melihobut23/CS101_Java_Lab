@@ -1,0 +1,57 @@
+import cs101.sosgame.SOS;
+
+import javax.swing.*;
+import java.awt.event.*;
+
+public class SOSGUIPanel extends JPanel implements ActionListener
+{
+    JPanel buttonsPanel;
+    JPanel infoPanel;
+    SOSCanvas sosCanvas;
+    SOS sos;
+    String playerName1;
+    String playerName2;
+    final int FIELD_WIDTH = 10;
+    JTextField player1 = new JTextField(FIELD_WIDTH);
+    JTextField player2 = new JTextField(FIELD_WIDTH);
+    JButton ok1 = new JButton("ok");
+    JButton ok2 = new JButton("ok");
+    JLabel firstPlayerLabel;
+    JLabel secondPlayerLabel;
+    JTextField gridCount = new JTextField(2);
+    
+    public SOSGUIPanel(SOS sos,  JTextField player1,  JTextField player2)
+    {
+        this.sos = sos;
+        this.player1 = player1;
+        this.player2 = player2;
+        sosCanvas = new SOSCanvas(sos);
+        add(player1);
+        add(player2);
+        add(ok1);
+        add(ok2);
+        ok1.addActionListener(this);
+        ok2.addActionListener(this);
+    }
+    
+    
+    public void actionPerformed(ActionEvent e)
+    {
+        if(e.getSource()== ok1)
+        {
+            playerName1 = player1.getText();
+            playerName2 = player2.getText();
+            firstPlayerLabel.setText( playerName1 + ": " + sos.getPlayerScore1() + "               ");
+            secondPlayerLabel.setText( "               " + playerName2 + ": " + sos.getPlayerScore2() );
+        }
+        
+        if (e.getSource() == ok2)
+        {
+            sosCanvas.board = new SOS(Integer.parseInt(gridCount.getText()));
+            sos = sosCanvas.board;
+            //draws table
+            sosCanvas.repaint();
+        }
+    }
+     
+}

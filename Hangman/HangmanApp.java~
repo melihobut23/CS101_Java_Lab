@@ -1,0 +1,174 @@
+import java.util.Scanner;
+
+/*
+ * This class includes a main method for the Hangman project.
+ * This class plays the hangman game
+ * While, do-while and 2 methods used to make this main method work
+ * It includes some interface and replayabilty features 
+
+ */
+public class HangmanApp
+{
+  public static void main( String [] args )
+  {
+    //Object references
+    Scanner scan = new Scanner(System.in);
+    Hangman hangman;
+    
+    //Variables
+    String guess;
+    int gameNum;
+    int request;
+    int tryLetterResult;
+    
+    gameNum = 1;
+    request = 0;
+    
+    //CODE
+    
+    //Greeting the player and explains how the game works
+    System.out.println( "              Welcome to the HANGMAN GAME!" );
+    System.out.println( "Rules: " );
+    System.out.println( "1.You need to guess the secret word by choosing letters." );
+    System.out.println( "2.After every guess (according to the accuracy of your guess) incomplete state of secret word will be displayed." );
+    System.out.println( "3.Maximum incorrect letter guess amount is defaultly 6." );
+    System.out.println( "4.If you guess the secret word before the maximum incorrect letters amount you win." );
+    System.out.println( "5.If you can't, you lose, man will be hanged and the secret word will be displayed.\n\n" );
+    
+    
+    //This while loops lets the user play the game as much as he/she wants.
+    while( gameNum == 1 || request== 1 ){
+      tryLetterResult = 0;
+      request =0;
+      guess = "";
+      
+       hangman = new Hangman();//Constructing a Hangman object every time player wants to play the game
+      
+      System.out.println( "Your max allowed incorrect guess amount is: " + hangman.getMaxAllowedIncorrectTries() + " ." );
+      
+      //This is the start of a while loop that plays the game ( where you guess and win or lose the game etc. )
+      while( !hangman.isGameOver()){
+        
+        System.out.println( "\n----------------------------------" );
+        System.out.println( "Amount of incorrect tries left: " + ( hangman.getMaxAllowedIncorrectTries() - hangman.getNumOfIncorrectTries() ) );
+        System.out.println( "----------------------------------" );
+        System.out.println( "The letters have been used before: " + hangman.getUsedLetters() );
+        System.out.println( "----------------------------------" );
+        
+        //Display hangman method only works for 6 max allowed incorrect tries otherwise it won't work
+        if( hangman.getMaxAllowedIncorrectTries() == 6 ){
+          displayHangman( hangman.getNumOfIncorrectTries() );//Used to display hangman according to number of incorrect tries
+        }
+        
+        System.out.println( "       " + hangman.getKnownSoFar() + "\n" );
+        System.out.println( hangman.getAllLetters() );
+        System.out.print( "Please choose and enter the letter you want to guess: " );
+        
+        //This do-while loop ensures player enters valid inputs
+        do{
+          if( tryLetterResult == -1 ){
+            System.out.print( "Invalid input. Please enter one of the letters you see above: " );
+          }
+          if( tryLetterResult == -2 ){
+            System.out.print( "You have choosen this letter already. Please enter a letter that you didn't guess before: " );
+          }
+          guess = scan.next();
+          tryLetterResult = hangman.tryThis(guess.charAt(0));
+        }while( tryLetterResult != -3 && tryLetterResult < 0 );//End of do-while
+        
+        if( !( hangman.hasLost() ) ){
+          System.out.println( "The letter you choosed " + guess + " is in the word " + tryLetterResult + " times." );
+        }
+        
+      }//End of inner while
+      
+      //The scenerio that the player wins the game
+      if( !(hangman.hasLost()) && hangman.isGameOver() ){
+        System.out.println( "******CONGRUTULATIONS****** You guessed the secret word.\n" );
+        System.out.println( "The secret word was: " + hangman.getKnownSoFar() + "\n" );
+        System.out.println( "It took " + hangman.getNumOfIncorrectTries() + " incorrect tries to find the word" );
+      }
+      
+      //The scenerio that player loses the game with his last letter try
+      if( hangman.hasLost() && hangman.isGameOver() ){
+        displayHangman(7);
+        System.out.println( "Sorry, but you lost!\n" );
+        
+        System.out.println( "The secret word was: " + findSecretWord(hangman) );
+      }
+      
+      System.out.print( "\nWould you like to play again? (If yes write \"1\" if not write \"0\"): " );
+      request = scan.nextInt();
+      
+      gameNum++;
+    }//End of outer while
+    
+    System.out.println( "\n THANKS FOR PLAYING!! Exitting..." );
+  }//End of main
+  
+  
+  /*
+   * This method's only purpose is to print the hangman graph.
+   * To give the player a better experience.
+   * !!This method takes max allowed incorrect tries as default 6.
+   * 
+   * @param incorrectTries Number of incorrect tries for printing hangman
+   */
+  public static void displayHangman( int incorrectTries ){
+    if( incorrectTries == 0){
+      System.out.println( "\n\n\n\n\n" );
+    }
+    if( incorrectTries == 1 ){
+      System.out.println( "\n\n\n|\n|\n|" );
+    }
+    if( incorrectTries == 2 ){
+      System.out.println( "\n|\n|\n|\n|\n|" );
+    }
+    if( incorrectTries == 3 ){
+      System.out.println( "_____\n|\n|\n|\n|\n|" );
+    }
+    if( incorrectTries == 4 ){
+      System.out.println( "_____\n|   |\n|\n|\n|\n|" );
+    }
+    if( incorrectTries == 5 ){
+      System.out.println( "_____\n|   |\n|   0\n|\n|\n|" );
+    }
+    if( incorrectTries == 6 ){
+      System.out.println( "_____\n|   |\n|   0\n|  /|\\ \n|   |\n|" );
+    }
+    if( incorrectTries == 7 ){
+      System.out.println( "_____\n|   |\n|   0\n|  /|\\ \n|   |\n|  / \\" );
+    }
+  }
+  
+  /*
+   * This method finds the secret word to show it to the user after the game ends.
+   *tryLetter method is used to do it
+   * !!This is done assuming after the game ends tryThis method can still place the letters inside the secret word
+   * 
+   * @param secretWord this is an Hangman object used to find the word
+   * @return word is a String that is the revealed secret word
+   */
+  public static StringBuffer findSecretWord( Hangman secretWord ){
+    
+    StringBuffer letter;
+    StringBuffer word;
+    
+    for( int i=0; i < secretWord.getAllLetters().length(); i++ )
+    {
+      letter = secretWord.getAllLetters();
+      secretWord.tryThis(letter.charAt(0));
+    }
+    word = secretWord.getKnownSoFar();
+    
+    return word;
+  }
+}
+
+
+
+
+
+
+
+

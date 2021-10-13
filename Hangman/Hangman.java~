@@ -1,0 +1,181 @@
+/**
+ * Hangman game
+ * @authors Akmuhammet Ashralyyev, Ali Aswani, Kutsal Bek�i, Melih Obut, Muhammed Maruf Satir
+ * @version 30.09.2019
+ */
+public class Hangman
+   
+{
+   private StringBuffer secretWord;
+   private StringBuffer allLetters;
+   private StringBuffer usedLetters;
+   private StringBuffer knownSoFar;
+   private int numberOfIncorrectTries;
+   private int maxAllowedIncorrectTries;
+   public String a; 
+   
+   public Hangman()
+   {
+      this.allLetters = new StringBuffer( "ABCDEFGHIJKLMNOPQRSTUVWXYZ" );
+      this.maxAllowedIncorrectTries = 6;
+      this.numberOfIncorrectTries = 0;
+      this.usedLetters = new StringBuffer("");
+      this.a = secretWord.toString();
+      a = chooseSecretWord();
+      this.knownSoFar = new StringBuffer( "" );
+      for( int i = 0; i < this.secretWord.length(); i++){
+         this.knownSoFar.append( '*');
+      }
+   }
+   
+   /**
+    * To get all the available letters
+    * @return all the available letters
+    */
+   public StringBuffer getAllLetters()
+   {
+      return allLetters;
+   }
+   
+   /**
+    * To get the used letters
+    * @return the used letters
+    */
+   public StringBuffer getUsedLetters()
+   {
+      return usedLetters;
+   }
+   
+   /**
+    * To get the number of incorrect tries so far
+    * @return the number of incorrect tries so far
+    */
+   public int getNumOfIncorrectTries()
+   {
+      return numberOfIncorrectTries;
+   }
+   
+   /**
+    * To get the number of maximum allowed incorrect tries
+    * @return the number of maximum allowed incorrect tries
+    */
+   public int getMaxAllowedIncorrectTries()
+   {
+      return maxAllowedIncorrectTries;
+   }
+   
+   
+   /**
+    * To get the currently known word 
+    * @return the currently known word 
+    */
+   public StringBuffer getKnownSoFar()
+   {
+      return knownSoFar;
+   }
+   
+   /**
+    * @param letter 
+    * @return
+    */
+   public int tryThis (char letter)
+   {
+      //properties
+      int numberOfIncorrectTries = 0;
+      int maxAllowedIncorrectTries = 6;
+
+      
+      
+      boolean match = false;
+      int count = 0;
+      boolean added = false;
+      
+      if ( numberOfIncorrectTries >= maxAllowedIncorrectTries )
+      {
+         return -3;
+      }
+      
+      if(Character.isLetter(letter))
+      {
+         if(usedLetters.toString().indexOf(letter) == -1)
+         { 
+            usedLetters.append(letter);
+         }
+         else
+         { 
+            return -2;
+         }
+         
+         for( int i = 0; i < secretWord.length() ; i++)
+         {
+            if( secretWord.charAt(i) == letter)
+            {
+               match = true;
+               count++;
+               
+               if (knownSoFar.charAt(i) != letter)
+               {
+                  knownSoFar.setCharAt( i, letter);
+                  
+               } 
+            }
+         }
+         if ( !match )
+         {
+            numberOfIncorrectTries++;
+         }
+         return count;
+      }
+      else
+      {
+         return -1;
+      }
+   }
+   
+   
+   
+   /**
+    * Checks whether the game has ended
+    * @return true - if the game has already ended, false - otherwise
+    */
+   public boolean isGameOver()
+   {
+      return (knownSoFar.equals (secretWord) || hasLost());
+   }
+   
+   /**
+    * Checks whether the game is lost
+    * @return true - if the game is lost, false - otherwise
+    */
+   public boolean hasLost()
+   {
+      return numberOfIncorrectTries > maxAllowedIncorrectTries;
+   }
+   
+   /**
+    */
+   private String chooseSecretWord ()
+   {
+      
+      //a list of random words
+      String list [] = new String [] {
+         
+         "elephant", "goat", "papa", "abdul", "cs" , "bilkent", "banana",
+            "october", "computer", "building", "mug", "battery", "discrete", "mathematics",
+            "tough", "mobile", "hahaahahah", "wallet", "card", "song", "country",
+            "chemical" , "biology", "babysitter", "coffee", "carpenter", "keyboard", "tea", "milk",
+            "headphones","design","advice","elephant","television","language","mosquito","vacation",
+            "artificial","highlight","intersection", "passion", "reliability", "planner", "telephone",
+            "picture", "photographer", "waiter", "treasure", "sweater", "laptop" ,"orange", "conservative",
+            "airplane", "plumber", "dictionary", "station", "market", "gravity", "electric" ,"mouse",
+            "classroom","mobile", "book", "car", "festival", "instructor", "bottle", "comb", "strugle",
+            "music", "kangaroo", "course", "mother", "cheese", "smile", "glasses", "sun", "son", "amazing",
+            "homework", "english", "tea", "database", "state", "government", "electrcity", "charger",
+            "butter", "clothes", "date", "love", "flirt", "night", "mars", "chocolate","age","century"
+      };
+      
+      int random = (int)(Math.random() * list.length);
+      return  list[random];
+   }
+   
+}
