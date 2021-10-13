@@ -1,0 +1,14 @@
+public class TestHTMLFilteredReader {
+
+ public static void main(String[] args) {
+  // TODO Auto-generated method stub
+  
+  HTMLFilteredReader read = new HTMLFilteredReader("http://www.cs.bilkent.edu.tr/~david/housman.htm");
+  
+  System.out.println(read.getPageContents());
+  
+  
+
+ }
+
+}
